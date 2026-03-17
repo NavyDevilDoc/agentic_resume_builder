@@ -1,0 +1,23 @@
+# Secrets — NEVER bake API keys into an image
+.env
+
+# Git and IDE
+.git
+.gitignore
+.vscode
+.idea
+
+# Python artifacts
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+
+# Cache data (rebuilt at runtime)
+data/intelligence_cache/
+
+# Dev files not needed in production
+CLAUDE.md
+PROGRESS.md
+tests/
+debug_*.py

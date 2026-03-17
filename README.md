@@ -44,11 +44,20 @@ cp .env.example .env
 # Edit .env with your API keys
 ```
 
-### Run
+### Run (Local)
 
 ```bash
 streamlit run app.py
 ```
+
+### Run (Docker)
+
+```bash
+docker build -t agentic-resume-builder .
+docker run -p 8501:8501 --env-file .env agentic-resume-builder
+```
+
+Then open http://localhost:8501. The `--env-file .env` flag passes your API keys into the container without baking them into the image.
 
 ### Test
 
