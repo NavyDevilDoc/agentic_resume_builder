@@ -61,6 +61,7 @@ jd_method = st.radio(
     options=["Paste text", "Paste a URL"],
     horizontal=True,
     label_visibility="collapsed",
+    key="jd_method",
 )
 
 job_posting_raw = ""
@@ -71,11 +72,13 @@ if jd_method == "Paste text":
         "Paste the job posting",
         height=200,
         placeholder="Paste the full job description here...",
+        key="jd_text",
     )
 elif jd_method == "Paste a URL":
     job_posting_url = st.text_input(
         "Job posting URL",
         placeholder="https://example.com/jobs/12345",
+        key="jd_url",
     )
 
 # ── Voice sample (optional) ────────────────────────────────────────────
@@ -86,6 +89,7 @@ voice_method = st.radio(
     options=["Paste text", "Upload a file"],
     horizontal=True,
     label_visibility="collapsed",
+    key="voice_method",
 )
 
 voice_sample_raw = ""
@@ -96,6 +100,7 @@ if voice_method == "Paste text":
         "Paste a writing sample to preserve your voice",
         height=100,
         placeholder="Any text you've written — email, cover letter, blog post...",
+        key="voice_text",
     )
 elif voice_method == "Upload a file":
     voice_file = st.file_uploader(
@@ -172,20 +177,30 @@ if st.button("Parse Resume", type="primary", disabled=uploaded_file is None):
 
     # Resolve job posting
     job_posting = None
+    logger.info("JD method: %s, URL value: '%s', text length: %d",
+                jd_method, job_posting_url[:80] if job_posting_url else '', len(job_posting_raw))
+
     if jd_method == "Paste a URL" and job_posting_url.strip():
         with st.spinner("Fetching job posting from URL..."):
             try:
                 fetched_text = _fetch_jd_from_url(job_posting_url.strip())
                 job_posting = sanitize_text(fetched_text)
+                logger.info("JD fetched from URL: %d chars", len(job_posting))
             except SanitizationError as e:
                 st.error(f"Job posting: {e}")
                 st.stop()
     elif jd_method == "Paste text" and job_posting_raw.strip():
         try:
             job_posting = sanitize_text(job_posting_raw)
+            logger.info("JD from pasted text: %d chars", len(job_posting))
         except SanitizationError as e:
             st.error(f"Job posting: {e}")
             st.stop()
+
+    if job_posting:
+        st.success(f"Job description loaded ({len(job_posting)} characters).")
+    else:
+        st.info("No job description provided — analysis will use general best practices.")
 
     # Resolve voice sample
     voice_sample = None
