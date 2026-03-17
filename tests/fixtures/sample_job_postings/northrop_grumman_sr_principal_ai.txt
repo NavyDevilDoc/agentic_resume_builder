@@ -1,0 +1,52 @@
+Sr. Principal AI Systems Engineer - Northrop Grumman
+
+Job Title: Sr. Principal AI Systems Engineer
+Company: Northrop Grumman
+Location: Falls Church, VA (Remote/Hybrid)
+Employment Type: Full-time
+
+Job Description
+
+Northrop Grumman seeks a senior-level AI Systems Engineer for the Insights & Intelligence (i2) organization. The role focuses on data ingestion, AI infrastructure, and AI model deployment at scale ensuring AI solutions are both economical and trustworthy.
+
+The position reports to the Manager of AI Infrastructure Engineering and involves collaboration with DevOps engineers, data scientists, and product teams to shape AI system roadmaps.
+
+Key Responsibilities
+
+- Architect end-to-end pipelines for data ingestion, model training, validation, and serving
+- Develop self-service APIs and CLI tools for internal teams managing vectorization and index resources
+- Build internal SDKs, libraries, and tools simplifying model deployment and lifecycle management
+- Research emerging embedding models and vector-search technologies
+- Evaluate cloud providers, on-premises hardware, and managed AI services through cost-benefit analysis
+- Implement AI use cases with compliance and security controls
+- Stay current on AI hardware and software frameworks
+
+Required Qualifications
+
+- Bachelor's degree in Computer Science, Software Engineering, Information Systems, or related field
+- 8 years relevant experience (Bachelor's) OR 6 years (Master's) OR 4 years (PhD)
+- Minimum 3 years in AI/MLOps
+- 2+ years with AWS or Azure cloud infrastructure
+- Programming expertise: Python, Java, Powershell/Bash
+- Experience with AI/ML frameworks, SQL/NoSQL databases, and distributed computing
+- Knowledge of cybersecurity for AI systems
+- Ability to match hardware configurations to AI requirements
+- Strong communication skills for technical and non-technical audiences
+
+Preferred Qualifications
+
+- Cloud-native AI services experience (SageMaker, EKS, ML, AKS)
+- Load testing and infrastructure scaling expertise
+- Hands-on AI systems implementation
+- DevOps practices and CI/CD automation
+- AWS Associate Level Certificate or higher
+- Azure Associate Level Certificate or higher
+- Active DoD Secret Clearance
+
+Additional Details
+
+- Relocation Assistance: None available
+- Clearance Required: No
+- Travel: Yes, 10% of the time
+- Salary Range: $156,400 - $234,600 annually
+- U.S. Citizenship Required: Yes for government clearance positions
