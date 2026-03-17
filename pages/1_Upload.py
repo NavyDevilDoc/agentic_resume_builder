@@ -112,11 +112,24 @@ elif voice_method == "Upload a file":
 
 # ── Helper: fetch JD from URL ─────────────────────────────────────────
 
+MIN_JD_LENGTH = 200  # A real JD should be at least this many characters
+
+
 def _fetch_jd_from_url(url: str) -> str:
-    """Fetch job posting text from a URL."""
+    """Fetch job posting text from a URL.
+
+    Note: Many job boards (Workday, Eightfold, Greenhouse, etc.) render
+    content via JavaScript. A basic HTTP GET cannot extract JD text from
+    these sites. If the extracted text is too short, the user is prompted
+    to paste the text directly.
+    """
     try:
         resp = requests.get(url, timeout=15, headers={
-            "User-Agent": "Mozilla/5.0 (compatible; ResumeBuilder/1.0)"
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            ),
         })
         resp.raise_for_status()
     except requests.RequestException as e:
@@ -127,16 +140,40 @@ def _fetch_jd_from_url(url: str) -> str:
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(resp.text, "html.parser")
 
-    # Remove script/style elements
-    for tag in soup(["script", "style", "nav", "header", "footer"]):
+    # Try to find the main job description content
+    # Many job sites use specific containers
+    jd_container = (
+        soup.find("div", class_=lambda c: c and "description" in c.lower() if c else False)
+        or soup.find("div", class_=lambda c: c and "job-detail" in c.lower() if c else False)
+        or soup.find("article")
+        or soup
+    )
+
+    # Remove script/style/nav elements
+    for tag in jd_container.find_all(["script", "style", "nav", "header", "footer", "iframe"]):
         tag.decompose()
 
-    text = soup.get_text(separator="\n", strip=True)
+    text = jd_container.get_text(separator="\n", strip=True)
 
     if not text or len(text) < 50:
         raise SanitizationError(
-            "Could not extract meaningful text from that URL. "
-            "The page may require login. Try pasting the text directly."
+            "Could not extract text from that URL. "
+            "The page may require login or use JavaScript rendering. "
+            "Try copying and pasting the job description text directly."
+        )
+
+    if len(text) < MIN_JD_LENGTH:
+        logger.warning(
+            "Fetched JD text is only %d chars (minimum expected: %d). "
+            "Page may use JavaScript rendering.",
+            len(text), MIN_JD_LENGTH,
+        )
+        raise SanitizationError(
+            f"The extracted text is only {len(text)} characters — too short "
+            "to be a complete job description. This site likely loads content "
+            "via JavaScript, which we can't access directly.\n\n"
+            "Please copy the job description text from the page and paste it "
+            "using the 'Paste text' option instead."
         )
 
     return text
